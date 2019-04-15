@@ -1,6 +1,6 @@
 [package]
 name = "derive_less"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Klas Segeljakt <klasseg@kth.se>"]
 readme = "README.md"
 repository = "https://github.com/segeljakt/derive_less"
