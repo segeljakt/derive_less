@@ -66,7 +66,7 @@ derive_less! {
 
 # Caveats
 
-Currently only supports tuple structs and enums with unnamed fields.
+Currently only supports tuple structs and enums with unnamed fields or unit fields.
 
 Fields and variants accept at most one `#[...]` due to current limitations in `macro_rules!`.
 

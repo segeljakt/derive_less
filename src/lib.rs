@@ -84,7 +84,7 @@ macro_rules! derive_less {
         struct $name $(< $($generic),* >)* (
             $(
                 #[$fmeta]
-                $(#[$current_fmeta:meta])*
+                $(#[$current_fmeta])*
                 $fvis
                 $field
             ),*
@@ -118,7 +118,7 @@ macro_rules! derive_less {
         struct $name $(< $($generic),* >)* (
             $(
                 #[$fmeta]
-                $(#[$current_fmeta:meta])*
+                $(#[$current_fmeta])*
                 $field
             ),*
         );
@@ -150,7 +150,7 @@ macro_rules! derive_less {
         $($svis)?
         struct $name $(< $($generic),* >)* (
             $(
-                $(#[$current_fmeta:meta])*
+                $(#[$current_fmeta])*
                 $fvis
                 $field
             ),*
@@ -173,7 +173,7 @@ macro_rules! derive_less {
 
         $(#[$current_emeta:meta])*
         enum $name:ident $(< $($generic:tt),* >)* {
-            $( $(#[$current_vmeta:meta])* $variant:ident($($field:ty),*)),* $(,)*
+            $( $(#[$current_vmeta:meta])* $variant:ident$(($($field:ty),*))?),* $(,)*
         }
 
         $($rest:tt)*
@@ -185,7 +185,7 @@ macro_rules! derive_less {
             $(
                 #[$vmeta]
                 $(#[$current_vmeta])*
-                $variant($($field),*)
+                $variant$(($($field),*))?
             ),*
         }
         derive_less! {
@@ -206,7 +206,7 @@ macro_rules! derive_less {
 
         $(#[$current_emeta:meta])*
         enum $name:ident $(< $($generic:tt),* $(,)* >)* {
-            $( $(#[$current_vmeta:meta])* $variant:ident($($field:ty),*)),* $(,)*
+            $( $(#[$current_vmeta:meta])* $variant:ident$(($($field:ty),*))?),* $(,)*
         }
 
         $($rest:tt)*
@@ -217,7 +217,7 @@ macro_rules! derive_less {
         enum $name $(< $($generic),* >)* {
             $(
                 $(#[$current_vmeta])*
-                $variant($($field),*)
+                $variant$(($($field),*))?
             ),*
         }
         derive_less! {
