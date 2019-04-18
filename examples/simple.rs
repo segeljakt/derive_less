@@ -1,8 +1,8 @@
 use derive_less::derive_less;
 
 derive_less! {
-    #[derive(Debug)] pub struct ... { #[derive(Debug)] pub ...  }
-    #[derive(Clone)] pub enum   ... { #[derive(Debug)]    ...  }
+    #[derive(Debug)] pub struct ... { #[derive(Debug)] pub ... }
+    #[derive(Clone)] pub enum   ... { #[derive(Debug)]     ... }
 
     struct Foo(i32, i32);
     enum Bar {
@@ -16,5 +16,3 @@ derive_less! {
         C(i32),
     }
 }
-
-

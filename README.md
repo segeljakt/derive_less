@@ -64,11 +64,48 @@ derive_less! {
 }
 ```
 
-# Caveats
+You can also mix in derives that only apply to certain items/variants/fields, e.g:
 
-Currently only supports tuple structs and enums with unnamed fields or unit fields.
+```rust
+use derive_less::derive_less;
 
-Fields and variants accept at most one `#[...]` due to current limitations in `macro_rules!`.
+derive_less! {
+    #[derive(Debug)] pub struct ... { #[apple] pub ...  }
+    #[derive(Clone)] pub enum   ... { #[orange]    ...  }
+
+    struct Foo(i32, i32);
+    enum Bar {
+        X(#[peanut] i32),
+        Y(i32),
+    }
+    #[derive(PartialEq, PartialOrd)]
+    struct Baz(i32, f32, i32);
+    enum Qux {
+        A(i32),
+        B(i32),
+        C(i32),
+    }
+}
+```
+
+# Limitations
+
+Currently only supports:
+* Tuple structs
+* Unit structs
+* Enums with unnamed or unit fields
+
+While structs and enums can take multiple `#[...]`, e.g.:
+
+```
+#[hello] #[world] struct ... { ...  }
+```
+
+Fields and variants accept at most one `#[...]` due to current restrictions in `macro_rules!`. In other words, this does not work at the moment:
+
+```
+struct ... { #[hello] #[world] ...  }
+```
 
 # Future work
 
