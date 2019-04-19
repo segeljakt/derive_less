@@ -20,3 +20,5 @@ derive_less! {
 // pub struct Bar(#[derive(Clone) pub i32);
 // pub struct Baz(pub i32);
 // pub struct Qux;
+
+fn main() {}

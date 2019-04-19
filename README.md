@@ -93,7 +93,9 @@ derive_less! {
 Currently only supports:
 * Tuple structs
 * Unit structs
+* Regular structs
 * Enums with unnamed or unit fields
+* Enums with (only) named fields
 
 While structs and enums can take multiple `#[...]`, e.g.:
 
