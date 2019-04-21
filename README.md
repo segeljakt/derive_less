@@ -1,6 +1,6 @@
 # derive_less
 
-A library for generating `#[...]` and `pub` code in item declarations.
+A macro for deriving macros. Use it to generate `#[...]` and `pub` code in item declarations.
 
 # Example
 
@@ -90,25 +90,30 @@ derive_less! {
 
 # Limitations
 
-Currently only supports:
-* Tuple structs
-* Unit structs
-* Regular structs
-* Enums with unnamed or unit fields
-* Enums with (only) named fields
+Currently supports:
+* Structs (All kinds)
+* Enums (All kinds)
 
 While structs and enums can take multiple `#[...]`, e.g.:
 
-```
+```rust
 #[hello] #[world] struct ... { ...  }
 ```
 
 Fields and variants accept at most one `#[...]` due to current restrictions in `macro_rules!`. In other words, this does not work at the moment:
 
-```
+```rust
 struct ... { #[hello] #[world] ...  }
 ```
 
 # Future work
 
-Handle more cases by either rewriting the `derive_less!` macro using Rust's procedural macro interface or through a build-script that generates declarative macro code. 
+Add support for:
+* Functions
+* Traits
+* Trait implementations
+* Unions
+* Type aliases
+* Use declarations
+
+Possibly rewrite `derive_less!` using Rust's procedural macro interface or through a build-script that generates declarative macro code. 

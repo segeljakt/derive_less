@@ -237,7 +237,7 @@ macro_rules! derive_less {
         }
     };
 
-    // Unnamed field / Unit field Enum (Variants with meta)
+    // Enum (Variants with meta)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
         ($($fmeta:meta)?) ($($fvis:ident)?)
@@ -245,8 +245,8 @@ macro_rules! derive_less {
         (  $vmeta:meta  )
 
         $(#[$current_emeta:meta])*
-        enum $ename:ident $(< $($generic:tt),+ >)+ {
-            $($(#[$current_vmeta:meta])* $vname:ident$(($($fty:ty),+))?),+ $(,)?
+        enum $ename:ident $(< $($generic:tt),+ >)? {
+            $($(#[$current_vmeta:meta])* $vname:ident $(($($vty:ty),+))? $({ $($fname:ident : $fty:ty),+ })?),+ $(,)?
         }
 
         $($rest:tt)*
@@ -254,8 +254,8 @@ macro_rules! derive_less {
         $(#[$emeta])*
         $(#[$current_emeta])*
         $($evis)?
-        enum $ename $(< $($generic),+ >)+ {
-            $(#[$vmeta] $(#[$current_vmeta])* $vname$(($($fty),+))?),+
+        enum $ename $(< $($generic),+ >)? {
+            $(#[$vmeta] $(#[$current_vmeta])* $vname $(($($vty),+))? $({ $($fname : $fty),+ })?),+
         }
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -266,7 +266,7 @@ macro_rules! derive_less {
         }
     };
 
-    // Unnamed field / Unit field Enum (Variants without meta)
+    // Enum (Variants without meta)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
         ($($fmeta:meta)?) ($($fvis:ident)?)
@@ -275,7 +275,7 @@ macro_rules! derive_less {
 
         $(#[$current_emeta:meta])*
         enum $ename:ident $(< $($generic:tt),+ >)? {
-            $($(#[$current_vmeta:meta])* $vname:ident$(($($fty:ty),+))?),+ $(,)?
+            $($(#[$current_vmeta:meta])* $vname:ident $(($($vty:ty),+))? $({ $($fname:ident : $fty:ty),+ })?),+ $(,)?
         }
 
         $($rest:tt)*
@@ -284,65 +284,7 @@ macro_rules! derive_less {
         $(#[$current_emeta])*
         $($evis)?
         enum $ename $(< $($generic),+ >)? {
-            $($(#[$current_vmeta])* $vname$(($($fty),+))?),+
-        }
-        derive_less! {
-            ($($smeta)*) ($($svis)?)
-            ($($fmeta)?) ($($fvis)?)
-            ($($emeta)*) ($($evis)?)
-            (          )
-            $($rest)*
-        }
-    };
-
-    // Named field Enum (Variants with meta)
-    {
-        ($($smeta:meta)*) ($($svis:ident)?)
-        ($($fmeta:meta)?) ($($fvis:ident)?)
-        ($($emeta:meta)*) ($($evis:ident)?)
-        (  $vmeta:meta  )
-
-        $(#[$current_emeta:meta])*
-        enum $ename:ident $(< $($generic:tt),+ >)? {
-            $($(#[$current_vmeta:meta])* $vname:ident { $($fname:ident : $fty:ty),+ }),+ $(,)*
-        }
-
-        $($rest:tt)*
-    } => {
-        $(#[$emeta])*
-        $(#[$current_emeta])*
-        $($evis)?
-        enum $ename $(< $($generic),+ >)? {
-            $(#[$vmeta] $(#[$current_vmeta])* $vname { $($fname : $fty),+ }),+
-        }
-        derive_less! {
-            ($($smeta)*) ($($svis)?)
-            ($($fmeta)?) ($($fvis)?)
-            ($($emeta)*) ($($evis)?)
-            (  $vmeta  )
-            $($rest)*
-        }
-    };
-
-    // Named field Enum (Variants without meta)
-    {
-        ($($smeta:meta)*) ($($svis:ident)?)
-        ($($fmeta:meta)?) ($($fvis:ident)?)
-        ($($emeta:meta)*) ($($evis:ident)?)
-        (               )
-
-        $(#[$current_emeta:meta])*
-        enum $ename:ident $(< $($generic:tt),+ >)? {
-            $($(#[$current_vmeta:meta])* $vname:ident { $($fname:ident : $fty:ty),+ }),+ $(,)?
-        }
-
-        $($rest:tt)*
-    } => {
-        $(#[$emeta])?
-        $(#[$current_emeta])*
-        $($evis)?
-        enum $ename $(< $($generic),+ >)? {
-            $($(#[$current_vmeta])* $vname { $($fname : $fty),+ }),+
+            $($(#[$current_vmeta])* $vname $(($($vty),+))? $({ $($fname : $fty),+ })?),+
         }
         derive_less! {
             ($($smeta)*) ($($svis)?)
