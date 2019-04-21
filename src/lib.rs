@@ -71,8 +71,11 @@ macro_rules! derive_less {
         ($($vmeta:meta)?)
 
         $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ >)? {
-            $($(#[$current_fmeta:meta])* $fname:ident : $fty:ty),+ $(,)?
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? {
+            $(
+                $(#[$current_fmeta:meta])*
+                $fname:ident : $fty:ty
+            ),+ $(,)?
         }
 
         $($rest:tt)*
@@ -81,7 +84,11 @@ macro_rules! derive_less {
         $(#[$smeta])*
         $($svis)?
         struct $sname $(< $($generic),+ >)? {
-            $(#[$fmeta] $(#[$current_fmeta])* $fvis $fname : $fty),+
+            $(
+                #[$fmeta]
+                $(#[$current_fmeta])*
+                $fvis $fname : $fty
+            ),+
         }
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -100,8 +107,11 @@ macro_rules! derive_less {
         ($($vmeta:meta)?)
 
         $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ >)? {
-            $($(#[$current_fmeta:meta])* $fname:ident : $fty:ty),+ $(,)?
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? {
+            $(
+                $(#[$current_fmeta:meta])*
+                $fname:ident : $fty:ty
+            ),+ $(,)?
         }
 
         $($rest:tt)*
@@ -110,7 +120,11 @@ macro_rules! derive_less {
         $(#[$smeta])*
         $($svis)?
         struct $sname $(< $($generic),+ >)? {
-            $(#[$fmeta] $(#[$current_fmeta])* $fname : $fty),+
+            $(
+                #[$fmeta]
+                $(#[$current_fmeta])*
+                $fname : $fty
+            ),+
         }
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -129,8 +143,11 @@ macro_rules! derive_less {
         ($($vmeta:meta)?)
 
         $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ >)? {
-            $($(#[$current_fmeta:meta])* $fname:ident : $fty:ty),+ $(,)?
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? {
+            $(
+                $(#[$current_fmeta:meta])*
+                $fname:ident : $fty:ty
+            ),+ $(,)?
         }
 
         $($rest:tt)*
@@ -139,7 +156,10 @@ macro_rules! derive_less {
         $(#[$smeta])*
         $($svis)?
         struct $sname $(< $($generic),+ >)? {
-            $($(#[$current_fmeta])* $fvis $fname : $fty),+
+            $(
+                $(#[$current_fmeta])*
+                $fvis $fname : $fty
+            ),+
         }
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -158,8 +178,11 @@ macro_rules! derive_less {
         ($($vmeta:meta)?)
 
         $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ >)? $((
-            $($(#[$current_fmeta:meta])* $fty:ty),+ $(,)?
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? $((
+            $(
+                $(#[$current_fmeta:meta])*
+                $fty:ty
+            ),+ $(,)?
         ))?;
 
         $($rest:tt)*
@@ -168,7 +191,11 @@ macro_rules! derive_less {
         $(#[$smeta])*
         $($svis)?
         struct $sname $(< $($generic),+ >)? $((
-            $(#[$fmeta] $(#[$current_fmeta])* $fvis $fty),+
+            $(
+                #[$fmeta]
+                $(#[$current_fmeta])*
+                $fvis $fty
+            ),+
         ))?;
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -187,8 +214,11 @@ macro_rules! derive_less {
         ($($vmeta:meta)?)
 
         $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ >)? $((
-            $($(#[$current_fmeta:meta])* $fty:ty),+ $(,)?
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? $((
+            $(
+                $(#[$current_fmeta:meta])*
+                $fty:ty
+            ),+ $(,)?
         ))?;
 
         $($rest:tt)*
@@ -197,7 +227,11 @@ macro_rules! derive_less {
         $(#[$smeta])*
         $($svis)?
         struct $sname $(< $($generic),+ >)+ $((
-            $(#[$fmeta] $(#[$current_fmeta])+ $fty),+
+            $(
+                #[$fmeta]
+                $(#[$current_fmeta])+
+                $fty
+            ),+
         ))?;
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -216,8 +250,11 @@ macro_rules! derive_less {
         ($($vmeta:meta)?)
 
         $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ >)? $((
-            $($(#[$current_fmeta:meta])* $fty:ty),+ $(,)?
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? $((
+            $(
+                $(#[$current_fmeta:meta])*
+                $fty:ty
+            ),+ $(,)?
         ))?;
 
         $($rest:tt)*
@@ -226,7 +263,10 @@ macro_rules! derive_less {
         $(#[$smeta])*
         $($svis)?
         struct $sname $(< $($generic),+ >)? $((
-            $($(#[$current_fmeta])* $fvis $fty),+
+            $(
+                $(#[$current_fmeta])*
+                $fvis $fty
+            ),+
         ))?;
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -245,8 +285,13 @@ macro_rules! derive_less {
         (  $vmeta:meta  )
 
         $(#[$current_emeta:meta])*
-        enum $ename:ident $(< $($generic:tt),+ >)? {
-            $($(#[$current_vmeta:meta])* $vname:ident $(($($vty:ty),+))? $({ $($fname:ident : $fty:ty),+ })?),+ $(,)?
+        enum $ename:ident $(< $($generic:tt),+ $(,)? >)? {
+            $(
+                $(#[$current_vmeta:meta])*
+                $vname:ident
+                $(( $($vty:ty),+ $(,)? ))?
+                $({ $($fname:ident : $fty:ty),+ $(,)? })?
+            ),+ $(,)?
         }
 
         $($rest:tt)*
@@ -255,7 +300,13 @@ macro_rules! derive_less {
         $(#[$current_emeta])*
         $($evis)?
         enum $ename $(< $($generic),+ >)? {
-            $(#[$vmeta] $(#[$current_vmeta])* $vname $(($($vty),+))? $({ $($fname : $fty),+ })?),+
+            $(
+                #[$vmeta]
+                $(#[$current_vmeta])*
+                $vname
+                $(( $($vty),+ ))?
+                $({ $($fname : $fty),+ })?
+            ),+
         }
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -274,8 +325,13 @@ macro_rules! derive_less {
         (               )
 
         $(#[$current_emeta:meta])*
-        enum $ename:ident $(< $($generic:tt),+ >)? {
-            $($(#[$current_vmeta:meta])* $vname:ident $(($($vty:ty),+))? $({ $($fname:ident : $fty:ty),+ })?),+ $(,)?
+        enum $ename:ident $(< $($generic:tt),+ $(,)? >)? {
+            $(
+                $(#[$current_vmeta:meta])*
+                $vname:ident
+                $(( $($vty:ty),+ $(,)? ))?
+                $({ $($fname:ident : $fty:ty),+ $(,)? })?
+            ),+ $(,)?
         }
 
         $($rest:tt)*
@@ -284,7 +340,12 @@ macro_rules! derive_less {
         $(#[$current_emeta])*
         $($evis)?
         enum $ename $(< $($generic),+ >)? {
-            $($(#[$current_vmeta])* $vname $(($($vty),+))? $({ $($fname : $fty),+ })?),+
+            $(
+                $(#[$current_vmeta])*
+                $vname
+                $(( $($vty),+ ))?
+                $({ $($fname : $fty),+ })?
+            ),+
         }
         derive_less! {
             ($($smeta)*) ($($svis)?)
@@ -301,8 +362,8 @@ macro_rules! derive_less {
         ($($fmeta:meta)?) ($($fvis:ident)?)
         ($($emeta:meta)*) ($($evis:ident)?)
         ($($vmeta:meta)?)
-        $($rest:tt)*
+//         $($rest:tt)*
     } => {
-        $($rest)*
+//         $($rest)*
     }
 }
