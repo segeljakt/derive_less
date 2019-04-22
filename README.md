@@ -94,18 +94,6 @@ Currently supports:
 * Structs (All kinds)
 * Enums (All kinds)
 
-While structs and enums can take multiple `#[...]`, e.g.:
-
-```rust
-#[hello] #[world] struct ... { ...  }
-```
-
-Fields and variants accept at most one `#[...]` due to current restrictions in `macro_rules!`. In other words, this does not work at the moment:
-
-```rust
-struct ... { #[hello] #[world] ...  }
-```
-
 # Future work
 
 Add support for:
