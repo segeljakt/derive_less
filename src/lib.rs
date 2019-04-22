@@ -5,42 +5,42 @@ macro_rules! derive_less {
 
     // (Struct + Enum)
     {
-        $(#[$smeta:meta])* $($svis:ident)? struct ... { $(#[$fmeta:meta])? $($fvis:ident)? ... }
-        $(#[$emeta:meta])* $($evis:ident)? enum   ... { $(#[$vmeta:meta])?                 ... }
+        $(#[$smeta:meta])* $($svis:ident)? struct ... { $(#[$fmeta:meta])* $($fvis:ident)? ... }
+        $(#[$emeta:meta])* $($evis:ident)? enum   ... { $(#[$vmeta:meta])*                 ... }
         $($rest:tt)*
     } => {
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            ($($fmeta)?) ($($fvis)?)
+            ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
             $($rest)*
         }
     };
 
     // (Enum + Struct)
     {
-        $(#[$emeta:meta])* $($evis:ident)? enum   ... { $(#[$vmeta:meta])?                 ... }
-        $(#[$smeta:meta])* $($svis:ident)? struct ... { $(#[$fmeta:meta])? $($fvis:ident)? ... }
+        $(#[$emeta:meta])* $($evis:ident)? enum   ... { $(#[$vmeta:meta])*                 ... }
+        $(#[$smeta:meta])* $($svis:ident)? struct ... { $(#[$fmeta:meta])* $($fvis:ident)? ... }
         $($rest:tt)*
     } => {
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            ($($fmeta)?) ($($fvis)?)
+            ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
             $($rest)*
         }
     };
 
     // Struct
     {
-        $(#[$smeta:meta])* $($svis:ident)? struct ... { $(#[$fmeta:meta])? $($fvis:ident)? ... }
+        $(#[$smeta:meta])* $($svis:ident)? struct ... { $(#[$fmeta:meta])* $($fvis:ident)? ... }
         $($rest:tt)*
     } => {
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            ($($fmeta)?) ($($fvis)?)
+            ($($fmeta)*) ($($fvis)?)
             (          ) (         )
             (          )
             $($rest)*
@@ -49,63 +49,92 @@ macro_rules! derive_less {
 
     // Enum
     {
-        $(#[$emeta:meta])* $($evis:ident)? enum   ... { $(#[$vmeta:meta])?                 ... }
+        $(#[$emeta:meta])* $($evis:ident)? enum   ... { $(#[$vmeta:meta])*                 ... }
         $($rest:tt)*
     } => {
         derive_less! {
             (          ) (         )
             (          ) (         )
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
             $($rest)*
         }
     };
 
     // TRANSFORM ITEMS
  
-    // Struct (Fields with both meta and pub)
+    // Struct (Begin)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
-        (  $fmeta:meta  ) (  $fvis:ident  )
+        ($($fmeta:meta)*) ($($fvis:ident)?)
         ($($emeta:meta)*) ($($evis:ident)?)
-        ($($vmeta:meta)?)
+        ($($vmeta:meta)*)
 
         $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? {
-            $(
-                $(#[$current_fmeta:meta])*
-                $fname:ident : $fty:ty
-            ),+ $(,)?
-        }
+        struct
 
         $($rest:tt)*
     } => {
-        $(#[$current_smeta])*
-        $(#[$smeta])*
-        $($svis)?
-        struct $sname $(< $($generic),+ >)? {
-            $(
-                #[$fmeta]
-                $(#[$current_fmeta])*
-                $fvis $fname : $fty
-            ),+
-        }
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            (  $fmeta  ) (  $fvis  )
+            ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
+
+            ($($fmeta)*)
+            $(#[$current_smeta])*
+            struct
+
             $($rest)*
         }
     };
 
-    // Struct (Fields with only meta)
+    // Struct (Fields with meta)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
-        (  $fmeta:meta  ) (               )
+        ($($fmeta:meta)*) ($($fvis:ident)?)
         ($($emeta:meta)*) ($($evis:ident)?)
-        ($($vmeta:meta)?)
+        ($($vmeta:meta)*)
 
+        ($first:meta $($apply:meta)*)
+        $(#[$current_smeta:meta])*
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? {
+            $(
+                $(#[$current_fmeta:meta])*
+                $fname:ident : $fty:ty
+            ),+ $(,)?
+        }
+
+        $($rest:tt)*
+    } => {
+        derive_less! {
+            ($($smeta)*) ($($svis)?)
+            ($($fmeta)*) ($($fvis)?)
+            ($($emeta)*) ($($evis)?)
+            ($($vmeta)*)
+
+            ($($apply)*)
+            $(#[$current_smeta])*
+            struct $sname $(< $($generic),+ >)? {
+                $(
+                    $(#[$current_fmeta])*
+                    #[$first]
+                    $fname : $fty
+                ),+
+            }
+
+            $($rest)*
+        }
+    };
+
+    // Struct (Fields with pub)
+    {
+        ($($smeta:meta)*) ($($svis:ident)?)
+        ($($fmeta:meta)*) (  $fvis:ident  )
+        ($($emeta:meta)*) ($($evis:ident)?)
+        ($($vmeta:meta)*)
+
+        ()
         $(#[$current_smeta:meta])*
         struct $sname:ident $(< $($generic:tt),+ $(,)? >)? {
             $(
@@ -121,62 +150,103 @@ macro_rules! derive_less {
         $($svis)?
         struct $sname $(< $($generic),+ >)? {
             $(
-                #[$fmeta]
+                $(#[$current_fmeta])*
+                $fvis $fname : $fty
+            ),+
+        }
+
+        derive_less! {
+            ($($smeta)*) ($($svis)?)
+            ($($fmeta)*) (  $fvis  )
+            ($($emeta)*) ($($evis)?)
+            ($($vmeta)*)
+            $($rest)*
+        }
+    };
+
+    // Struct (Fields without pub)
+    {
+        ($($smeta:meta)*) ($($svis:ident)?)
+        ($($fmeta:meta)*) (               )
+        ($($emeta:meta)*) ($($evis:ident)?)
+        ($($vmeta:meta)*)
+
+        ()
+        $(#[$current_smeta:meta])*
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? {
+            $(
+                $(#[$current_fmeta:meta])*
+                $fname:ident : $fty:ty
+            ),+ $(,)?
+        }
+
+        $($rest:tt)*
+    } => {
+        $(#[$current_smeta])*
+        $(#[$smeta])*
+        $($svis)?
+        struct $sname $(< $($generic),+ >)? {
+            $(
                 $(#[$current_fmeta])*
                 $fname : $fty
             ),+
         }
+
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            (  $fmeta  ) (         )
+            ($($fmeta)*) (         )
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
             $($rest)*
         }
     };
 
-    // Struct (Fields with only pub)
+    // Unit struct / Tuple struct (Fields with meta)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
-        (               ) (  $fvis:ident  )
+        ($($fmeta:meta)*) ($($fvis:ident)?)
         ($($emeta:meta)*) ($($evis:ident)?)
-        ($($vmeta:meta)?)
+        ($($vmeta:meta)*)
 
+        ($first:meta $($apply:meta)*)
         $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? {
+        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? $((
             $(
                 $(#[$current_fmeta:meta])*
-                $fname:ident : $fty:ty
+                $fty:ty
             ),+ $(,)?
-        }
+        ))?;
 
         $($rest:tt)*
     } => {
-        $(#[$current_smeta])*
-        $(#[$smeta])*
-        $($svis)?
-        struct $sname $(< $($generic),+ >)? {
-            $(
-                $(#[$current_fmeta])*
-                $fvis $fname : $fty
-            ),+
-        }
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            (          ) (  $fvis  )
+            ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
+
+            ($($apply)*)
+            $(#[$current_smeta])*
+            struct $sname $(< $($generic),+ >)? $((
+                $(
+                    $(#[$current_fmeta])*
+                    #[$first]
+                    $fty
+                ),+
+            ))?;
+
             $($rest)*
         }
     };
 
-    // Unit struct / Tuple struct (Fields with both meta and pub)
+    // Unit struct / Tuple struct (Fields with pub)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
-        (  $fmeta:meta  ) (  $fvis:ident  )
+        ($($fmeta:meta)*) (  $fvis:ident  )
         ($($emeta:meta)*) ($($evis:ident)?)
-        ($($vmeta:meta)?)
+        ($($vmeta:meta)*)
 
+        ()
         $(#[$current_smeta:meta])*
         struct $sname:ident $(< $($generic:tt),+ $(,)? >)? $((
             $(
@@ -192,27 +262,28 @@ macro_rules! derive_less {
         $($svis)?
         struct $sname $(< $($generic),+ >)? $((
             $(
-                #[$fmeta]
                 $(#[$current_fmeta])*
                 $fvis $fty
             ),+
         ))?;
+
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            (  $fmeta  ) (  $fvis  )
+            ($($fmeta)*) (  $fvis  )
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
             $($rest)*
         }
     };
 
-    // Unit struct / Tuple struct (Fields with only meta)
+    // Unit struct / Tuple struct (Fields without pub)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
-        (  $fmeta:meta  ) (               )
+        ($($fmeta:meta)*) (               )
         ($($emeta:meta)*) ($($evis:ident)?)
-        ($($vmeta:meta)?)
+        ($($vmeta:meta)*)
 
+        ()
         $(#[$current_smeta:meta])*
         struct $sname:ident $(< $($generic:tt),+ $(,)? >)? $((
             $(
@@ -226,53 +297,44 @@ macro_rules! derive_less {
         $(#[$current_smeta])*
         $(#[$smeta])*
         $($svis)?
-        struct $sname $(< $($generic),+ >)+ $((
+        struct $sname $(< $($generic),+ >)? $((
             $(
-                #[$fmeta]
-                $(#[$current_fmeta])+
+                $(#[$current_fmeta])*
                 $fty
             ),+
         ))?;
+
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            (  $fmeta  ) (         )
+            ($($fmeta)*) (         )
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
             $($rest)*
         }
     };
 
-    // Unit struct / Tuple struct (Fields with only pub)
+    // Enum (Begin)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
-        (               ) (  $fvis:ident  )
+        ($($fmeta:meta)*) ($($fvis:ident)?)
         ($($emeta:meta)*) ($($evis:ident)?)
-        ($($vmeta:meta)?)
+        ($($vmeta:meta)*)
 
-        $(#[$current_smeta:meta])*
-        struct $sname:ident $(< $($generic:tt),+ $(,)? >)? $((
-            $(
-                $(#[$current_fmeta:meta])*
-                $fty:ty
-            ),+ $(,)?
-        ))?;
+        $(#[$current_emeta:meta])*
+        enum
 
         $($rest:tt)*
     } => {
-        $(#[$current_smeta])*
-        $(#[$smeta])*
-        $($svis)?
-        struct $sname $(< $($generic),+ >)? $((
-            $(
-                $(#[$current_fmeta])*
-                $fvis $fty
-            ),+
-        ))?;
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            (          ) (  $fvis  )
+            ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
-            ($($vmeta)?)
+            ($($vmeta)*)
+
+            ($($vmeta)*)
+            $(#[$current_emeta])*
+            enum
+
             $($rest)*
         }
     };
@@ -280,10 +342,53 @@ macro_rules! derive_less {
     // Enum (Variants with meta)
     {
         ($($smeta:meta)*) ($($svis:ident)?)
-        ($($fmeta:meta)?) ($($fvis:ident)?)
+        ($($fmeta:meta)*) ($($fvis:ident)?)
         ($($emeta:meta)*) ($($evis:ident)?)
-        (  $vmeta:meta  )
+        ($($vmeta:meta)*)
 
+        ($first:meta $($apply:meta)*)
+        $(#[$current_emeta:meta])*
+        enum $ename:ident $(< $($generic:tt),+ $(,)? >)? {
+            $(
+                $(#[$current_vmeta:meta])*
+                $vname:ident
+                $(( $($vty:ty),+ $(,)? ))?
+                $({ $($fname:ident : $fty:ty),+ $(,)? })?
+            ),+ $(,)?
+        }
+
+        $($rest:tt)*
+    } => {
+        derive_less! {
+            ($($smeta)*) ($($svis)?)
+            ($($fmeta)*) ($($fvis)?)
+            ($($emeta)*) ($($evis)?)
+            ($($vmeta)*)
+
+            ($($apply)*)
+            $(#[$current_emeta])*
+            enum $ename $(< $($generic),+ >)? {
+                $(
+                    $(#[$current_vmeta])*
+                    #[$first]
+                    $vname
+                    $(( $($vty),+ ))?
+                    $({ $($fname : $fty),+ })?
+                ),+
+            }
+
+            $($rest)*
+        }
+    };
+
+    // Enum (Done)
+    {
+        ($($smeta:meta)*) ($($svis:ident)?)
+        ($($fmeta:meta)*) ($($fvis:ident)?)
+        ($($emeta:meta)*) ($($evis:ident)?)
+        ($($vmeta:meta)*)
+
+        ()
         $(#[$current_emeta:meta])*
         enum $ename:ident $(< $($generic:tt),+ $(,)? >)? {
             $(
@@ -301,57 +406,18 @@ macro_rules! derive_less {
         $($evis)?
         enum $ename $(< $($generic),+ >)? {
             $(
-                #[$vmeta]
                 $(#[$current_vmeta])*
                 $vname
                 $(( $($vty),+ ))?
                 $({ $($fname : $fty),+ })?
             ),+
         }
+
         derive_less! {
             ($($smeta)*) ($($svis)?)
-            ($($fmeta)?) ($($fvis)?)
+            ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
-            (  $vmeta  )
-            $($rest)*
-        }
-    };
-
-    // Enum (Variants without meta)
-    {
-        ($($smeta:meta)*) ($($svis:ident)?)
-        ($($fmeta:meta)?) ($($fvis:ident)?)
-        ($($emeta:meta)*) ($($evis:ident)?)
-        (               )
-
-        $(#[$current_emeta:meta])*
-        enum $ename:ident $(< $($generic:tt),+ $(,)? >)? {
-            $(
-                $(#[$current_vmeta:meta])*
-                $vname:ident
-                $(( $($vty:ty),+ $(,)? ))?
-                $({ $($fname:ident : $fty:ty),+ $(,)? })?
-            ),+ $(,)?
-        }
-
-        $($rest:tt)*
-    } => {
-        $(#[$emeta])?
-        $(#[$current_emeta])*
-        $($evis)?
-        enum $ename $(< $($generic),+ >)? {
-            $(
-                $(#[$current_vmeta])*
-                $vname
-                $(( $($vty),+ ))?
-                $({ $($fname : $fty),+ })?
-            ),+
-        }
-        derive_less! {
-            ($($smeta)*) ($($svis)?)
-            ($($fmeta)?) ($($fvis)?)
-            ($($emeta)*) ($($evis)?)
-            (          )
+            ($($vmeta)*)
             $($rest)*
         }
     };
@@ -359,9 +425,9 @@ macro_rules! derive_less {
     // Exhausted
     {
         ($($smeta:meta)*) ($($svis:ident)?)
-        ($($fmeta:meta)?) ($($fvis:ident)?)
+        ($($fmeta:meta)*) ($($fvis:ident)?)
         ($($emeta:meta)*) ($($evis:ident)?)
-        ($($vmeta:meta)?)
+        ($($vmeta:meta)*)
 //         $($rest:tt)*
     } => {
 //         $($rest)*
