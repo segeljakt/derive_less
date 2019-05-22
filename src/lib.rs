@@ -9,7 +9,7 @@ macro_rules! derive_less {
         $(#[$emeta:meta])* $($evis:ident)? enum   ... { $(#[$vmeta:meta])*                 ... }
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
@@ -24,7 +24,7 @@ macro_rules! derive_less {
         $(#[$smeta:meta])* $($svis:ident)? struct ... { $(#[$fmeta:meta])* $($fvis:ident)? ... }
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
@@ -38,7 +38,7 @@ macro_rules! derive_less {
         $(#[$smeta:meta])* $($svis:ident)? struct ... { $(#[$fmeta:meta])* $($fvis:ident)? ... }
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             (          ) (         )
@@ -52,7 +52,7 @@ macro_rules! derive_less {
         $(#[$emeta:meta])* $($evis:ident)? enum   ... { $(#[$vmeta:meta])*                 ... }
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             (          ) (         )
             (          ) (         )
             ($($emeta)*) ($($evis)?)
@@ -75,7 +75,7 @@ macro_rules! derive_less {
 
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
@@ -107,7 +107,7 @@ macro_rules! derive_less {
 
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
@@ -155,7 +155,7 @@ macro_rules! derive_less {
             ),+
         }
 
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) (  $fvis  )
             ($($emeta)*) ($($evis)?)
@@ -192,7 +192,7 @@ macro_rules! derive_less {
             ),+
         }
 
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) (         )
             ($($emeta)*) ($($evis)?)
@@ -219,7 +219,7 @@ macro_rules! derive_less {
 
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
@@ -267,7 +267,7 @@ macro_rules! derive_less {
             ),+
         ))?;
 
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) (  $fvis  )
             ($($emeta)*) ($($evis)?)
@@ -304,7 +304,7 @@ macro_rules! derive_less {
             ),+
         ))?;
 
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) (         )
             ($($emeta)*) ($($evis)?)
@@ -325,7 +325,7 @@ macro_rules! derive_less {
 
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
@@ -359,7 +359,7 @@ macro_rules! derive_less {
 
         $($rest:tt)*
     } => {
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
@@ -413,7 +413,7 @@ macro_rules! derive_less {
             ),+
         }
 
-        derive_less! {
+        $crate::derive_less! {
             ($($smeta)*) ($($svis)?)
             ($($fmeta)*) ($($fvis)?)
             ($($emeta)*) ($($evis)?)
