@@ -1,6 +1,6 @@
 # derive_less
 
-A macro for deriving macros. Use it to generate `#[...]` and `pub` code in item declarations.
+A macro for templating item declarations.
 
 # Example
 
@@ -47,8 +47,8 @@ Instead of typing out `#[orange]`, `#[apple]`, and `pub`, repeatedly for each it
 use derive_less::derive_less;
 
 derive_less! {
-    #[derive(Debug)] pub struct ... { #[apple] pub ...  }
-    #[derive(Clone)] pub enum   ... { #[orange]    ...  }
+    #[derive(Debug)] pub struct __ { #[apple] pub __:__ }
+    #[derive(Clone)] pub enum   __ { #[orange]    __    }
 
     struct Foo(i32, i32);
     enum Bar {
@@ -70,8 +70,8 @@ You can also mix in derives that only apply to certain items/variants/fields, e.
 use derive_less::derive_less;
 
 derive_less! {
-    #[derive(Debug)] pub struct ... { #[apple] pub ...  }
-    #[derive(Clone)] pub enum   ... { #[orange]    ...  }
+    #[derive(Debug)] pub struct __ { #[apple] pub __:__  }
+    #[derive(Clone)] pub enum   __ { #[orange]    __     }
 
     struct Foo(i32, i32);
     enum Bar {
@@ -87,21 +87,3 @@ derive_less! {
     }
 }
 ```
-
-# Limitations
-
-Currently supports:
-* Structs (All kinds)
-* Enums (All kinds)
-
-# Future work
-
-Add support for:
-* Functions
-* Traits
-* Trait implementations
-* Unions
-* Type aliases
-* Use declarations
-
-Possibly rewrite `derive_less!` using Rust's procedural macro interface or through a build-script that generates declarative macro code. 
