@@ -1,11 +1,10 @@
-// #![feature(trace_macros)]
-
-// trace_macros!(true);
+#![allow(dead_code)]
+#![allow(unused_attributes)]
 
 use derive_less::derive_less;
 
 derive_less! {
-    #[derive(Clone)] #[derive(Debug)]  pub enum ... { #[derive(Clone)] ... }
+    #[derive(Clone)] #[derive(Debug)] pub enum __ { #[derive(Clone)] __ }
 
     enum Foo {
         A,

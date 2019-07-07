@@ -1,8 +1,11 @@
+#![allow(dead_code)]
+#![allow(unused_attributes)]
+
 use derive_less::derive_less;
 
 derive_less! {
-    #[derive(Debug)] pub struct ... { #[derive(Debug)] pub ... }
-    #[derive(Clone)] pub enum   ... { #[derive(Debug)]     ... }
+    #[derive(Debug)] pub struct __ { #[derive(Debug)] pub __:__ }
+    #[derive(Clone)] pub enum   __ { #[derive(Debug)]     __    }
 
     struct Foo;
     struct Bar(f32, i32);
@@ -27,5 +30,5 @@ derive_less! {
         }
     }
 }
- 
+
 fn main() {}
